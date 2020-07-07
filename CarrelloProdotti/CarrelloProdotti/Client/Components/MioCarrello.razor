@@ -1,0 +1,12 @@
+﻿@if (CarrelloCorrente != null)
+{
+    <div>
+        <span class="oi oi-cart"></span> Hai @CarrelloCorrente.NumeroProdotti Prodotti
+    </div>
+}
+
+
+@code {
+    [Parameter]
+    public Carrello CarrelloCorrente { get; set; }
+}

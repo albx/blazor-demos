@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
 using CarrelloProdotti.Server.Services;
+using CarrelloProdotti.Dominio.Vendite.Comandi;
 
 namespace CarrelloProdotti.Server
 {
@@ -28,6 +29,7 @@ namespace CarrelloProdotti.Server
             services.AddRazorPages();
 
             services
+                .AddSingleton<ComandiCarrello>()
                 .AddScoped<ProdottiControllerServices>()
                 .AddScoped<CarrelloControllerServices>();
         }

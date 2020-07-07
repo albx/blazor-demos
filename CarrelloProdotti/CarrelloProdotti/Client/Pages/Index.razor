@@ -1,26 +1,40 @@
 ﻿@page "/"
 @inject HttpClient Http 
 
-@if (prodotti == null || !prodotti.Any())
-{
-    <h2>Nessun prodotto</h2>
-}
-else
-{
-    foreach (var prodotto in prodotti)
-    {
-        <Prodotto Model="prodotto"
-                  OnAggiuntaProdotto="AggiungiProdotto"/>
-    }
-}
+<div class="row">
+    <div class="col">
+        <MioCarrello CarrelloCorrente="carrello" />
+    </div>
+</div>
+<hr />
+<div class="row">
+    <div class="col">
+        @if (prodotti == null || !prodotti.Any())
+        {
+            <h2>Nessun prodotto</h2>
+        }
+        else
+        {
+            foreach (var prodotto in prodotti)
+            {
+                <Prodotto Model="prodotto"
+                          OnAggiuntaProdotto="AggiungiProdotto" />
+            }
+        }
+    </div>
+</div>
 
 @code{
     IList<ProdottoModel> prodotti = new List<ProdottoModel>();
+
+    Carrello carrello;
 
     protected override async Task OnInitializedAsync()
     {
         // chiamata API client
         prodotti = await Http.GetFromJsonAsync<List<ProdottoModel>>("api/prodotti");
+        carrello = await Http.GetFromJsonAsync<Carrello>("api/carrello");
+
         await base.OnInitializedAsync();
     }
 
@@ -31,6 +45,12 @@ else
         if (response.IsSuccessStatusCode)
         {
             Console.WriteLine("OK!");
+            await RicaricaCarrello();
         }
+    }
+
+    private async Task RicaricaCarrello()
+    {
+        carrello = await Http.GetFromJsonAsync<Carrello>("api/carrello");
     }
 }

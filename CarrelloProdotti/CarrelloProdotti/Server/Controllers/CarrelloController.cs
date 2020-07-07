@@ -20,6 +20,13 @@ namespace CarrelloProdotti.Server.Controllers
 
         public CarrelloControllerServices ControllerServices { get; }
 
+        [HttpGet]
+        public IActionResult Get()
+        {
+            var carrello = ControllerServices.OttieniCarrello();
+            return Ok(carrello);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]ProdottoCarrello prodotto)
         {
