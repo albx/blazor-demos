@@ -1,0 +1,36 @@
+﻿@page "/"
+@inject HttpClient Http 
+
+@if (prodotti == null || !prodotti.Any())
+{
+    <h2>Nessun prodotto</h2>
+}
+else
+{
+    foreach (var prodotto in prodotti)
+    {
+        <Prodotto Model="prodotto"
+                  OnAggiuntaProdotto="AggiungiProdotto"/>
+    }
+}
+
+@code{
+    IList<ProdottoModel> prodotti = new List<ProdottoModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // chiamata API client
+        prodotti = await Http.GetFromJsonAsync<List<ProdottoModel>>("api/prodotti");
+        await base.OnInitializedAsync();
+    }
+
+    async Task AggiungiProdotto(ProdottoCarrello prodotto)
+    {
+        // api
+        var response = await Http.PostAsJsonAsync("api/carrello", prodotto);
+        if (response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("OK!");
+        }
+    }
+}

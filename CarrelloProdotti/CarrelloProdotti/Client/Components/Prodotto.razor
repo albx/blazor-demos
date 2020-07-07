@@ -1,0 +1,32 @@
+﻿<div class="card">
+    <div class="card-body">
+        <h3>@Model.Nome</h3>
+
+        <p>@Model.Prezzo</p>
+        <input @bind="quantitaDaAggiungere" type="text" class="form-control" />
+        <button type="button" class="btn btn-primary" @onclick="AggiungiProdottoAlCarrello">Aggiungi</button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public ProdottoModel Model { get; set; }
+
+    [Parameter]
+    public EventCallback<ProdottoCarrello> OnAggiuntaProdotto { get; set; }
+
+    private int quantitaDaAggiungere = 0;
+
+    async Task AggiungiProdottoAlCarrello()
+    {
+        var prodottoDaAggiungere = new ProdottoCarrello
+        {
+            Nome = Model.Nome,
+            Codice = Model.Codice,
+            Prezzo = Model.Prezzo,
+            Quantita = quantitaDaAggiungere
+        };
+
+        await OnAggiuntaProdotto.InvokeAsync(prodottoDaAggiungere);
+    }
+}
