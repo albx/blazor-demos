@@ -1,18 +1,13 @@
 ﻿using CarrelloProdotti.Dominio.Vendite.Modelli;
 using System;
 
-namespace CarrelloProdotti.Dominio.Vendite.Comandi
+namespace CarrelloProdotti.Dominio.Vendite.Servizi
 {
     /// <summary>
     /// Rappresenta le azioni che si possono fare su un carrello
     /// </summary>
-    public class ComandiCarrello
+    public class ServiziCarrello
     {
-        /// <summary>
-        /// Istanza statica per simulare la persistenza
-        /// </summary>
-        public static Carrello CarrelloCorrente;
-
         /// <summary>
         /// Aggiunge il prodotto al carrello
         /// </summary>
@@ -23,12 +18,12 @@ namespace CarrelloProdotti.Dominio.Vendite.Comandi
         /// <param name="quantita">La quantità</param>
         public void AggiungiProdotto(string acquirente, Guid codiceProdotto, string nomeProdotto, decimal prezzo, int quantita)
         {
-            if (CarrelloCorrente == null || CarrelloCorrente.Acquirente != acquirente)
+            if (DatabaseVendite.CarrelloCorrente == null || DatabaseVendite.CarrelloCorrente.Acquirente != acquirente)
             {
-                CarrelloCorrente = Carrello.NuovoCarrello(acquirente);
+                DatabaseVendite.CarrelloCorrente = Carrello.NuovoCarrello(acquirente);
             }
 
-            CarrelloCorrente.AggiungiProdotto(new Carrello.Prodotto
+            DatabaseVendite.CarrelloCorrente.AggiungiProdotto(new Carrello.Prodotto
             {
                 Codice = codiceProdotto,
                 Nome = nomeProdotto,

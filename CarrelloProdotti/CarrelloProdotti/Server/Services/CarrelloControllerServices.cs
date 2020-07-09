@@ -1,4 +1,5 @@
-﻿using CarrelloProdotti.Dominio.Vendite.Comandi;
+﻿using CarrelloProdotti.Dominio.Vendite;
+using CarrelloProdotti.Dominio.Vendite.Servizi;
 using CarrelloProdotti.Shared.Carrello;
 using System;
 using System.Linq;
@@ -8,19 +9,19 @@ namespace CarrelloProdotti.Server.Services
 {
     public class CarrelloControllerServices
     {
-        public CarrelloControllerServices(ComandiCarrello comandi)
+        public CarrelloControllerServices(ServiziCarrello servizi)
         {
-            Comandi = comandi ?? throw new ArgumentNullException(nameof(comandi));
+            Servizi = servizi ?? throw new ArgumentNullException(nameof(servizi));
         }
 
         /// <summary>
         /// Questa proprietà rappresenta le azioni possibili su un carrello
         /// </summary>
-        public ComandiCarrello Comandi { get; }
+        public ServiziCarrello Servizi { get; }
 
         public Task AggiungiProdottoAlCarrello(ProdottoCarrello prodotto)
         {
-            Comandi.AggiungiProdotto("Alberto Mori", prodotto.Codice, prodotto.Nome, prodotto.Prezzo, prodotto.Quantita);
+            Servizi.AggiungiProdotto("Alberto Mori", prodotto.Codice, prodotto.Nome, prodotto.Prezzo, prodotto.Quantita);
             return Task.FromResult(0);
         }
 
@@ -28,7 +29,7 @@ namespace CarrelloProdotti.Server.Services
         {
             var carrello = new Carrello
             {
-                NumeroProdotti = ComandiCarrello.CarrelloCorrente?.Elementi?.Count() ?? 0
+                NumeroProdotti = DatabaseVendite.CarrelloCorrente?.Elementi?.Count() ?? 0
             };
 
             return carrello;

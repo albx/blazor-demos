@@ -1,13 +1,10 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Linq;
 using CarrelloProdotti.Server.Services;
-using CarrelloProdotti.Dominio.Vendite.Comandi;
+using CarrelloProdotti.Dominio.Vendite.Servizi;
 
 namespace CarrelloProdotti.Server
 {
@@ -29,7 +26,7 @@ namespace CarrelloProdotti.Server
             services.AddRazorPages();
 
             services
-                .AddSingleton<ComandiCarrello>()
+                .AddSingleton<ServiziCarrello>()
                 .AddScoped<ProdottiControllerServices>()
                 .AddScoped<CarrelloControllerServices>();
         }
