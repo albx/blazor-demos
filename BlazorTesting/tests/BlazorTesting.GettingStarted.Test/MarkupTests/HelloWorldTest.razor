@@ -1,0 +1,20 @@
+﻿@inherits TestComponentBase
+
+<Fixture Test="HelloWorld_Should_Render_Correctly_From_Markup">
+    <ComponentUnderTest>
+        <HelloWorld />
+    </ComponentUnderTest>
+
+    @code {
+        void HelloWorld_Should_Render_Correctly_From_Markup(Fixture fixture)
+        {
+            var component = fixture.GetComponentUnderTest<HelloWorld>();
+            component.SetParametersAndRender(new[] 
+            {
+                ComponentParameter.CreateParameter(nameof(HelloWorld.Name), "Twitch")
+            });
+
+            component.MarkupMatches("<h1>Hello world from Twitch!</h1>");
+        }
+    }
+</Fixture>

@@ -1,0 +1,61 @@
+﻿@inherits TestComponentBase
+
+<Fixture Description="Adding a task, should reset the input field"
+         Setup="RegisterTaskService"
+         Test="Adding_Task_Should_Reset_The_Input_Field">
+
+    <ComponentUnderTest>
+        <CascadingValue Name="Theme" Value=@("dark-theme")>
+            <Tasks />
+        </CascadingValue>
+    </ComponentUnderTest>
+
+    <Fragment Id="form">
+        <form>
+            <input placeholder="Add todo here . . ." type="text" value="" />
+            <button type="submit">Add task</button>
+        </form>
+    </Fragment>
+
+    <Fragment Id="expected tasks">
+        <ul class="dark-theme" id="tasks">
+            <li>Existing task</li>
+            <li>FOO BAR BAZ</li>
+        </ul>
+    </Fragment>
+
+    @code {
+        Mock<ITaskService> serviceMock;
+
+        void RegisterTaskService(Fixture fixture)
+        {
+            serviceMock = new();
+            serviceMock.Setup(s => s.LoadItemsAsync())
+                .Returns(Task.FromResult(new List<string> { "Existing task" }));
+
+            fixture.Services.AddSingleton(serviceMock.Object);
+        }
+
+        void Adding_Task_Should_Reset_The_Input_Field(Fixture fixture)
+        {
+            var component = fixture.GetComponentUnderTest<Tasks>();
+            var expectedForm = fixture.GetFragment("form");
+            var expectedList = fixture.GetFragment("expected tasks");
+
+            component.Find("input").Change("FOO BAR BAZ");
+            component.Find("button").Click();
+
+            Assert.Equal("dark-theme", component.Instance.ThemeClass);
+
+            serviceMock.Verify(s => s.LoadItemsAsync(), Times.Once);
+
+            var actualItems = component.Find("#tasks");
+            actualItems.MarkupMatches(expectedList);
+
+            serviceMock.Verify(s => s.AddNewItemAsync(It.IsAny<string>()));
+
+            var actualForm = component.Find("form");
+            actualForm.MarkupMatches(expectedForm);
+        }
+    }
+</Fixture>
