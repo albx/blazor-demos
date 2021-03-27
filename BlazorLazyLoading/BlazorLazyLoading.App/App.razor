@@ -1,0 +1,41 @@
+@using System.Reflection
+@using Microsoft.AspNetCore.Components.WebAssembly.Services
+
+@inject LazyAssemblyLoader AssemblyLoader
+
+<Router AppAssembly="@typeof(Program).Assembly"
+        PreferExactMatches="@true"
+        AdditionalAssemblies="lazyLoadedAssemblies">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p>Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+</Router>
+
+@code {
+    List<Assembly> lazyLoadedAssemblies = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var assemblies = await AssemblyLoader.LoadAssembliesAsync(
+                new[] { "BlazorLazyLoading.Lib.dll" });
+
+        lazyLoadedAssemblies.AddRange(assemblies);
+    }
+
+    //async Task NavigateAsync(NavigationContext context)
+    //{
+    //    if (context.Path == "fetchdata")
+    //    {
+    //        var assemblies = await AssemblyLoader.LoadAssembliesAsync(
+    //            new[] { "BlazorLazyLoading.Lib.dll" });
+
+    //        lazyLoadedAssemblies.AddRange(assemblies);
+    //    }
+    //}
+}
